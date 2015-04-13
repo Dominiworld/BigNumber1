@@ -516,7 +516,7 @@ MyLong Mul(MyLong a, MyLong b)
 			//tmp = a.pointer[i] * b.pointer[j] + carry + result.pointer[i + j];
 			asm(
 				"movq %0, %%rsi\n"
-				"movq %1r, %%rdi\n"
+				"movq %1, %%rdi\n"
 				"addq %2, %%rsi\n"
 				"addq %3, %%rdi\n"
 				"movq %4, %%rbx\n"
