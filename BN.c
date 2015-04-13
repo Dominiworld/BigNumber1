@@ -5,9 +5,7 @@
 #include <string.h>
 #include <math.h>
 #include <string.h>
-#include <iostream>
-
-using namespace std;
+#include <local.h>
 
 
 struct MyLong
@@ -59,8 +57,8 @@ int main(int argc, char * argv[])
 
 	if ( argc < 5 || argc > 7)
 	{
-		printf("Неверный формат строки!");
-		printf("Основные операции: file1 operation(+, -, / , *) file2 resultfile[-b]");
+		printf("РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ СЃС‚СЂРѕРєРё!");
+		printf("РћСЃРЅРѕРІРЅС‹Рµ РѕРїРµСЂР°С†РёРё: file1 operation(+, -, / , *) file2 resultfile[-b]");
 		printf("file1 operation(+,-,/,*) file2 resultfile [-b]");
 		return 0;
 	}
@@ -119,7 +117,7 @@ int main(int argc, char * argv[])
 
 	if (strlen(argv[2])!=1)
 	{
-		printf("Ошибка ввода. Операция - один символ!");
+		printf("РћС€РёР±РєР° РІРІРѕРґР°. РћРїРµСЂР°С†РёСЏ - РѕРґРёРЅ СЃРёРјРІРѕР»!");
 		return 0;
 	}
 	else
@@ -146,7 +144,7 @@ int main(int argc, char * argv[])
 
 		default:
 
-			printf("Неверная операция.\n '+' - сложение \n '-' - вычитание\n '*' - умножение\n '/' - деление\n 'p' - возведение в степень по модулю");
+			printf("РќРµРІРµСЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ.\n '+' - СЃР»РѕР¶РµРЅРёРµ \n '-' - РІС‹С‡РёС‚Р°РЅРёРµ\n '*' - СѓРјРЅРѕР¶РµРЅРёРµ\n '/' - РґРµР»РµРЅРёРµ\n 'p' - РІРѕР·РІРµРґРµРЅРёРµ РІ СЃС‚РµРїРµРЅСЊ РїРѕ РјРѕРґСѓР»СЋ");
 			return 0;
 			break;
 		}
@@ -169,7 +167,7 @@ int main(int argc, char * argv[])
 		}
 		else
 		{
-			printf("Неверный формат строки!");
+			printf("РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ СЃС‚СЂРѕРєРё!");
 			return 0;
 		}
 	}
@@ -190,12 +188,12 @@ int main(int argc, char * argv[])
 		}
 		else
 		{
-			printf("Неверный формат строки!");
+			printf("РќРµРІРµСЂРЅС‹Р№ С„РѕСЂРјР°С‚ СЃС‚СЂРѕРєРё!");
 			return 0;
 		}
 	}
 
-	printf("Операция выполнена успешно");
+	printf("РћРїРµСЂР°С†РёСЏ РІС‹РїРѕР»РЅРµРЅР° СѓСЃРїРµС€РЅРѕ");
 
 	return 0;
 }
@@ -368,7 +366,7 @@ MyLong Divide(MyLong a, MyLong b, MyLong &ost)
 		B.pointer[i+1] = b.pointer[i];
 	}
 
-	while ((B.pointer[B.size - 1] <= A.pointer[A.size - 1]) && (B.pointer[B.size - 1] & 0x8000000000000000) != 0x8000000000000000) //А что если вылезет?? Доделать
+	while ((B.pointer[B.size - 1] <= A.pointer[A.size - 1]) && (B.pointer[B.size - 1] & 0x8000000000000000) != 0x8000000000000000) //Рђ С‡С‚Рѕ РµСЃР»Рё РІС‹Р»РµР·РµС‚?? Р”РѕРґРµР»Р°С‚СЊ
 	{
 		ShiftLeft(B);
 	}
@@ -471,8 +469,8 @@ MyLong smallPow(MyLong a,unsigned long long p, MyLong m)
 	res.SetMemory(1);
 	res.pointer[0] = 1;
 
-	char c[64]; //двоичное представление числа p
-	int k = 0; //определяет наибольший ненулевой элемент в c
+	char c[64]; //РґРІРѕРёС‡РЅРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ С‡РёСЃР»Р° p
+	int k = 0; //РѕРїСЂРµРґРµР»СЏРµС‚ РЅР°РёР±РѕР»СЊС€РёР№ РЅРµРЅСѓР»РµРІРѕР№ СЌР»РµРјРµРЅС‚ РІ c
 
 	for (int i = 0; i < 64; i++)
 	{
@@ -647,7 +645,7 @@ bool WriteBinFile(char* file, MyLong number)
 		return true;
 	}
 
-	printf("Не удалось открыть файл %s!", file);
+	printf("РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» %s!", file);
 	return false;
 	
 }
@@ -711,7 +709,7 @@ MyLong ReadTextFile(char* file)
 	}
 	else
 	{
-		printf("Не удалось открыть файл %s!", file);
+		printf("РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» %s!", file);
 		res.SetMemory(1);
 		res.size = 0;	
 	}
@@ -736,7 +734,7 @@ bool WriteTextFile(char* file, MyLong number)
 	MyLong null;
 	null.SetMemory(1);
 
-	//считаем количество элементов выходного массива
+	//СЃС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІС‹С…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°
 	MyLong ost;
 	unsigned long long k = 1;
 	while (Compare(numcopy, null) == 1)
@@ -766,7 +764,7 @@ bool WriteTextFile(char* file, MyLong number)
 
 		for (int i = res.size - 2; i > -1; i--)
 		{
-			//нужно предусмотреть тот случай, когда количество цифр < 9	
+			//РЅСѓР¶РЅРѕ РїСЂРµРґСѓСЃРјРѕС‚СЂРµС‚СЊ С‚РѕС‚ СЃР»СѓС‡Р°Р№, РєРѕРіРґР° РєРѕР»РёС‡РµСЃС‚РІРѕ С†РёС„СЂ < 9	
 			char buffer[10] = "000000000";
 			int k = 0;
 			while (res.pointer[i] > 0)
@@ -783,7 +781,7 @@ bool WriteTextFile(char* file, MyLong number)
 		return true;
 	}
 
-		printf("Не удалось открыть файл %s!", file);
+		printf("РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» %s!", file);
 		return false;
 
 	free(numcopy.pointer);
@@ -808,7 +806,7 @@ MyLong ReadBinFile(char* file)
 
 		if (size == 0)
 		{
-			printf("Файл %s пустой!", file);
+			printf("Р¤Р°Р№Р» %s РїСѓСЃС‚РѕР№!", file);
 			number.SetMemory(1);
 			number.size = 0;
 			return number;
@@ -827,7 +825,7 @@ MyLong ReadBinFile(char* file)
 	}
 	else
 	{
-		printf("Не удалось открыть файл %s!", file);
+		printf("РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р» %s!", file);
 		number.SetMemory(1);
 		number.size = 0;
 	}
