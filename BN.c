@@ -294,13 +294,16 @@ MyLong ShortDivide(MyLong a, unsigned int b, unsigned int &ost)
 	{
 			mov esi, a.pointer
 			add esi, s
+			mov edi, res.pointer
+			add edi, s
 			mov ecx, a.size
 			xor edx, edx
 
 		m : 	mov eax, [esi]
 			div b
-			mov[esi], eax
-			add esi, 4
+			mov[edi], eax
+			sub esi, 4
+			sub edi, 4
 			loop m
 			mov ost, edx
 	}
