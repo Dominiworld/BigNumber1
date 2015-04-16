@@ -193,7 +193,6 @@ int main(int argc, char * argv[])
 		int k = 4;
 		if (argv[2][0] == 'p')
 		{
-			
 			k = 5;
 		}
 		if (k < argc)
@@ -241,7 +240,7 @@ MyLong Sum(MyLong a, MyLong b)
 			mov esi, result.pointer
 			mov edi, minnumber.pointer
 			mov ecx, minnumber.size
-		m : mov eax, [esi]
+		m : 	mov eax, [esi]
 			popf
 			adc eax, [edi]
 			pushf
@@ -281,7 +280,7 @@ MyLong Sub(MyLong a, MyLong b)
 			mov esi, result.pointer
 			mov edi, minnumber.pointer
 			mov ecx, minnumber.size
-		m : mov eax, [esi]
+		m 	mov eax, [esi]
 			popf
 			sbb eax, [edi]
 			pushf
@@ -309,34 +308,34 @@ MyLong Mul(MyLong a, MyLong b)
 			mov ebx, res.pointer
 			mov ecx, a.size
 
-		m1 : push ecx
-			 mov edi, b.pointer
-			 mov ecx, b.size
-		 m2 : mov eax, [esi]
-			  mov edx, [edi]
-			  mul edx
+		m1 : 	push ecx
+			mov edi, b.pointer
+			mov ecx, b.size
+		m2 : 	mov eax, [esi]
+			mov edx, [edi]
+			mul edx
 
-			 add[ebx], eax
-			 adc edx, cf
-			 jnc m3
-			 mov cf, 1
-			  jmp m4
-		  m3 : mov cf, 0
-		   m4 : add[ebx + 4], edx
-				jnc m5
-				mov cf, 1
+			add[ebx], eax
+			adc edx, cf
+			jnc m3
+			mov cf, 1
+			jmp m4
+		m3 : 	mov cf, 0
+		m4 : 	add[ebx + 4], edx
+			jnc m5
+			mov cf, 1
 
-			m5 : add ebx, 4
-				 add edi, 4
+		m5 : 	add ebx, 4
+			add edi, 4
 
-				 loop m2
+			loop m2
 
-				 pop ecx
-				 sub ebx, bs
+			pop ecx
+			sub ebx, bs
 
-				 add esi, 4
-				 add ebx, 4
-				 loop m1
+			add esi, 4
+			add ebx, 4
+			loop m1
 	}
 
 	return Normalize(res);
@@ -704,7 +703,7 @@ MyLong ReadTextFile(char* file)
 		unsigned int h = 0;
 		while ((ch = fgetc(in))!=EOF)
 		{
-			if ((ch - '0' > 9) || (ch - '0' < 0))
+			if ((ch > '9') || (ch < '0'))
 			{
 				printf("Файл %s содержит не только цифры!");
 				res.size = 0;
