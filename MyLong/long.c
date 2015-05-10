@@ -381,7 +381,7 @@ MyLong ShortDivide(MyLong a, unsigned long long b, unsigned long long *ost)
 		"mov  %%rdx, %0\n"
 		:"=r"(k)
 		: "r"(A.pointer), "r"(s), "r"(res.pointer), "r"(A.size), "r"(b)
-		: "rsi", "rsi", "rcx", "rdx", "rax"
+		: "rsi", "rdi", "rcx", "rdx", "rax"
 		);
 
 	*ost = k;
@@ -627,7 +627,7 @@ int WriteTextFile(char* file, MyLong number)
 
 	MyLong tmp;
 
-	//считаем количество элементов выходного массива
+	//Г±Г·ГЁГІГ ГҐГ¬ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГЅГ«ГҐГ¬ГҐГ­ГІГ®Гў ГўГ»ГµГ®Г¤Г­Г®ГЈГ® Г¬Г Г±Г±ГЁГўГ 
 	unsigned long long ost;
 	unsigned long long k = 1;
 
@@ -662,7 +662,7 @@ int WriteTextFile(char* file, MyLong number)
 
 		for (int i = res.size - 2; i > -1; i--)
 		{
-			//нужно предусмотреть тот случай, когда количество цифр < 9	
+			//Г­ГіГ¦Г­Г® ГЇГ°ГҐГ¤ГіГ±Г¬Г®ГІГ°ГҐГІГј ГІГ®ГІ Г±Г«ГіГ·Г Г©, ГЄГ®ГЈГ¤Г  ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® Г¶ГЁГґГ° < 9	
 			char buffer[10] = "000000000";
 			int k = 0;
 			while (res.pointer[i] > 0)
