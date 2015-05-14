@@ -2,7 +2,7 @@
 #include <stdlib.h> 
 #include <memory.h>
 #include <string.h>
-#include "long.h"
+#include "1.h"
 
 void SetMemory(unsigned long long s, MyLong *p)
 {
