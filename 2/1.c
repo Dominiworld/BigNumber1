@@ -1,11 +1,8 @@
-
 #include <stdio.h>
 #include <stdlib.h> 
 #include <memory.h>
 #include <string.h>
-#include "1.h"
-
-
+#include "long.h"
 
 void SetMemory(unsigned long long s, MyLong *p)
 {
@@ -68,7 +65,6 @@ MyLong res = Normalize(&result);
 }
 MyLong Sub(MyLong a, MyLong b)
 {
-	MyLong result;
 	MyLong maxnumber = a;
 	MyLong minnumber = b;
 
@@ -77,6 +73,7 @@ MyLong Sub(MyLong a, MyLong b)
 		maxnumber = b;
 		minnumber = a;
 	}
+	MyLong result;
 	SetMemory(maxnumber.size, &result);
 	Copy(maxnumber, &result);
 
@@ -107,9 +104,9 @@ MyLong Sub(MyLong a, MyLong b)
 MyLong Mul(MyLong a, MyLong b)
 {
 	MyLong res;
-	unsigned long long cf = 0;	
+	SetMemory(a.size + b.size, &res);
+	unsigned long long cf = 0;
 	unsigned long long bs = b.size * sizeof(unsigned long long);
-SetMemory(a.size + b.size, &res);
 
 	asm(	"movq %0, %%rsi\n"
 		"movq %1, %%rbx\n"
@@ -147,15 +144,10 @@ SetMemory(a.size + b.size, &res);
 MyLong Divide(MyLong a, MyLong b, MyLong *mod)
 {
 	MyLong res;
-	MyLong tmp;
-	MyLong A;
-	MyLong tmp1;
-	int i;
-
 
 	if (ShortCompare(a, 0) == 0)
 	{
-		printf("Деление на 0!");
+		printf ("Division by zero!");
 		SetMemory(1, &res);
 		SetMemory(1, mod);
 		mod->size = 0;
@@ -165,7 +157,6 @@ MyLong Divide(MyLong a, MyLong b, MyLong *mod)
 
 	if (b.size == 1)
 	{
-
 		SetMemory(1, mod);
 		unsigned long long t = 0;
 		res = ShortDivide(a, b.pointer[0], &t);
@@ -177,18 +168,25 @@ MyLong Divide(MyLong a, MyLong b, MyLong *mod)
 	
 	if (Compare(a, b) == -1)
 	{
+		
 		SetMemory(1, &res);
 		SetMemory(a.size, mod);
 		Copy(a, mod);
+		return res;
 	}
 
 	SetMemory(a.size - b.size + 1, &res);
 
-	
+	MyLong tmp;
+	MyLong A;
 	SetMemory(a.size, &A);
 	Copy(a, &A);
 
-	
+	MyLong tmp1;
+
+	int i = res.size - 1;
+
+
 	for (i = res.size - 1; i >-1; i--)
 	{
 		unsigned long long x = 0;
@@ -262,7 +260,6 @@ MyLong Pow(MyLong a, MyLong p, MyLong m)
 		FreeMemory(&tmp2);
 		tmp = Divide(tmp3, m, &res);
 		FreeMemory(&tmp3);
-
 		FreeMemory(&tmp);
 		tmp = Divide(Normalize(&res), m, &res);
 		FreeMemory(&tmp);
@@ -345,7 +342,7 @@ MyLong ShortDivide(MyLong a, unsigned long long b, unsigned long long *ost)
 	MyLong res;
 	if (!b)
 	{
-		printf("Деление на 0!");
+		printf("Division by zero!");
 		SetMemory(1, &res);
 		ost = 0;
 		res.size = 0;
@@ -423,9 +420,10 @@ MyLong smallPow(MyLong a, unsigned long long p, MyLong m)
 	res.pointer[0] = 1;
 	MyLong tmp;
 
-	char c[64]; //двоичное представление числа p
+
+	char c[64]; 
 	memset(c, 0, 64);
-	int k = 0; //определяет наибольший ненулевой элемент в c
+	int k = 0; 
 
 
 	for (int i = 0; i < 64; i++)
@@ -445,11 +443,14 @@ MyLong smallPow(MyLong a, unsigned long long p, MyLong m)
 	for (int i = k; i >= 0; i--)
 	{
 		tmp1 = Mul(res, res);
+
 		tmp = Divide(tmp1, m, &res);
+
 
 		FreeMemory(&tmp1);
 
 		FreeMemory(&tmp);
+
 		if (c[i] == 1)
 		{
 			tmp1 = Mul(res, a);
@@ -457,7 +458,7 @@ MyLong smallPow(MyLong a, unsigned long long p, MyLong m)
 			
 			FreeMemory(&tmp1);
 			FreeMemory(&tmp);
-		}	
+		}
 		
 	}
 
@@ -532,7 +533,7 @@ int WriteBinFile(char* file, MyLong number)
 		return 1;
 	}
 	
-		printf("Не удалось открыть файл %s!", file);
+		printf("Error by opening file %s!", file);
 		return 0;
 }
 MyLong ReadTextFile(char* file)
@@ -587,7 +588,7 @@ MyLong ReadTextFile(char* file)
 		{
 			if ((ch > '9') || (ch < '0'))
 			{
-				printf("Файл %s содержит не только цифры!", file);
+				printf("File %s contains not only numbers!", file);
 				res.size = 0;
 				return res;
 			}
@@ -604,11 +605,10 @@ MyLong ReadTextFile(char* file)
 		
 		fclose(in);
 		FreeMemory(&k);
-		printf("size=%llu",res.size);
 	}
 	else
 	{
-		printf("Не удалось открыть файл %s!", file);
+		printf("Error by opening file %s!", file);
 		res.size = 0;		
 	}
 
@@ -627,7 +627,7 @@ int WriteTextFile(char* file, MyLong number)
 
 	MyLong tmp;
 
-	//считаем количество элементов выходного массива
+	//СЃС‡РёС‚Р°РµРј РєРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ РІС‹С…РѕРґРЅРѕРіРѕ РјР°СЃСЃРёРІР°
 	unsigned long long ost;
 	unsigned long long k = 1;
 
@@ -662,7 +662,7 @@ int WriteTextFile(char* file, MyLong number)
 
 		for (int i = res.size - 2; i > -1; i--)
 		{
-			//нужно предусмотреть тот случай, когда количество цифр < 9	
+			//РЅСѓР¶РЅРѕ РїСЂРµРґСѓСЃРјРѕС‚СЂРµС‚СЊ С‚РѕС‚ СЃР»СѓС‡Р°Р№, РєРѕРіРґР° РєРѕР»РёС‡РµСЃС‚РІРѕ С†РёС„СЂ < 9	
 			char buffer[10] = "000000000";
 			int k = 0;
 			while (res.pointer[i] > 0)
@@ -685,7 +685,7 @@ int WriteTextFile(char* file, MyLong number)
 	}
 	FreeMemory(&numcopy);
 	FreeMemory(&res);
-		printf("Не удалось открыть файл %s!", file);
+		printf("Error by opening file %s!", file);
 		return 0;
 
 } 
@@ -704,7 +704,7 @@ MyLong ReadBinFile(char* file)
 
 		if (size == 0)
 		{
-			printf("Файл %s пустой!", file);
+			printf("File %s is empty!", file);
 			SetMemory(1, &number);
 			number.size = 0;
 			return number;
@@ -723,13 +723,9 @@ MyLong ReadBinFile(char* file)
 	}
 	else
 	{
-		printf("Не удалось открыть файл %s!", file);
+		printf("Error by opening file %s!", file);
 		SetMemory(1, &number);
 		number.size = 0;
 	}
 	return number;
 }
-	
-
-
-
