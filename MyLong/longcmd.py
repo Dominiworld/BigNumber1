@@ -1,7 +1,7 @@
 import sys
 import longmodule
 if len(sys.argv) < 5 or len(sys.argv)>7:
-	print "Incorrect input!")
+	print ("Incorrect input!")
 	print("Input string format: file1 operation(+, -, / , m, %) file2 resultfile [-b]");
 	print("PowMod: file ^ powfile modfile resultfile [-b]");
 	exit()
