@@ -1,44 +1,38 @@
-extern "C"
+typedef struct
 {
-#include "1.h"
+	unsigned long long* pointer;
+	unsigned long long size;
 }
+ MyLong;
 
-class  LONG {
-public:
 
-	LONG();
-	LONG operator=(LONG t);
-	LONG operator+(LONG);
-	LONG operator-(LONG);
-	LONG operator*(LONG);
-	LONG operator/(LONG);
-	LONG operator%(LONG);
-	bool operator>(LONG);
-	bool operator<(LONG);
-	bool operator==(LONG);
-	bool operator<=(LONG);
-	bool operator>=(LONG);
+void SetMemory(unsigned long long s, MyLong *p);
+void Copy(MyLong a, MyLong *p);
+void FreeMemory(MyLong *p);
 
-	LONG operator+(unsigned long long);
-	LONG operator-(unsigned long long);
-	LONG operator*(unsigned long long);
-	LONG operator/(unsigned long long);
-	unsigned long long operator%(unsigned long long);
-	bool operator>(unsigned long long);
-	bool operator<(unsigned long long);
-	bool operator==(unsigned long long);
-	bool operator<=(unsigned long long);
-	bool operator>=(unsigned long long);
+///Большие
+MyLong Sum(MyLong a, MyLong b);
+MyLong Sub(MyLong a, MyLong b);
+MyLong Mul(MyLong a, MyLong b);
+MyLong Divide(MyLong a, MyLong b, MyLong *mod);
+MyLong Pow(MyLong a, MyLong b, MyLong m); //использует smallPow, Pow32
+int Compare(MyLong a, MyLong b);
 
-	void FromTextFile(char* file);
-	void FromBinFile(char* file);
-	bool ToBinFile(char* file);
-	bool ToTextFile(char* file);
-	void Kill();
-	bool IsEmpty();
-	friend LONG PowMod(LONG a,LONG pow, LONG mod);
-	friend LONG PowMod(LONG a, nsigned long long pow, LONG mod);
-private:
-	MyLong number;
+///Маленькие
+MyLong ShortSum(MyLong a, unsigned long long b);
+MyLong ShortSub(MyLong a, unsigned long long b);
+MyLong ShortMul(MyLong a, unsigned long long b);
+MyLong ShortDivide(MyLong a, unsigned long long b, unsigned long long *ost);
+MyLong smallPow(MyLong a, unsigned long long p, MyLong m); //a^p mod m
+int ShortCompare(MyLong a, unsigned long long b);
 
-};
+//Вспомогательные
+MyLong Pow64(MyLong a, MyLong m);  //a^(2^32) mod m
+MyLong ShiftLeft(MyLong *a, unsigned long long i); //сдвиг на i элементов массива 
+MyLong Normalize(MyLong *a);			//уменьшение размера a за счет убирания незначащих нулей
+
+//Работа с файлами
+MyLong ReadTextFile(char* file);
+MyLong ReadBinFile(char* file);
+int WriteBinFile(char* file, MyLong number);
+int WriteTextFile(char* file, MyLong number);
