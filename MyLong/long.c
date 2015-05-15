@@ -544,22 +544,19 @@ MyLong ReadTextFile(char* file)
 	
 	MyLong res;
 	SetMemory(1, &res);
-
-
+	
 	if ((in = fopen(file, "r")) != NULL)
 	{
-
-		
 		while (fgetc(in) != EOF)
 		{
 			size++;
 		}
-
-
+		
 		if (size == 0)
 		{
 			SetMemory(1, &res);
 			res.size = 0;
+			printf("File %s is empty", file);
 			return res;
 		}
 
@@ -571,36 +568,29 @@ MyLong ReadTextFile(char* file)
 		
 		MyLong tmp1;
 
-		for (int l = 0; l < size; l++)
-		{				
-			tmp1 = ShortMul(k, 10);
-			FreeMemory(&k);
-			k = tmp1;
-		}	
-
 		unsigned long long tmp = 0;
 		unsigned long long ost = 0;
 		char ch;
 
 		MyLong tmp2;
 
-		while ((ch = fgetc(in))!=EOF)
+		while (offset!=-size-1)
 		{
+			ch = fgetc(in);
 			if ((ch > '9') || (ch < '0'))
 			{
 				printf("File %s contains not only numbers!", file);
 				res.size = 0;
 				return res;
 			}
-
-			k = ShortDivide(k, 10, &ost);
-
 			tmp = ch - '0';			
 			tmp1 = ShortMul(k, tmp);
 			tmp2 = Normalize(&tmp1);
-			res = Sum(res, tmp2);	
+			res = Sum(res, tmp2);
 			FreeMemory(&tmp2);
-
+			k = ShortMul(k,10);
+			offset--;
+			fseek(in, offset, SEEK_END);
 		}
 		
 		fclose(in);
@@ -611,7 +601,6 @@ MyLong ReadTextFile(char* file)
 		printf("Error by opening file %s!", file);
 		res.size = 0;		
 	}
-
 	return res;
 }
 int WriteTextFile(char* file, MyLong number)
