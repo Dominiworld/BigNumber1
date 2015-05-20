@@ -5,9 +5,11 @@
 
 class  LONG {
 public:
-
 	LONG();
-	LONG operator=(LONG t);
+	LONG(unsigned long long t);
+	LONG(char* str);
+	LONG operator=(LONG);
+	LONG operator=(unsigned long long);
 	LONG operator+(LONG);
 	LONG operator-(LONG);
 	LONG operator*(LONG);
@@ -36,9 +38,20 @@ public:
 	void FromBinFile(char* file);
 	bool ToBinFile(char* file);
 	bool ToTextFile(char* file);
-	void Kill();
 	bool IsEmpty();
+
 
 private:
 	MyLong number;
+	char* Print();
+	void Kill();
 };
+
+%extend LONG
+{
+	const char* __str__()
+	{
+	 return self->Print();
+	}
+};
+

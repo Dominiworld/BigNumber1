@@ -381,7 +381,7 @@ MyLong ShortDivide(MyLong a, unsigned long long b, unsigned long long *ost)
 		"mov  %%rdx, %0\n"
 		:"=r"(k)
 		: "r"(A.pointer), "r"(s), "r"(res.pointer), "r"(A.size), "r"(b)
-		: "rsi", "rdi", "rcx", "rdx", "rax"
+		: "rsi", "rsi", "rcx", "rdx", "rax"
 		);
 
 	*ost = k;
@@ -536,6 +536,58 @@ int WriteBinFile(char* file, MyLong number)
 		printf("Error by opening file %s!", file);
 		return 0;
 }
+
+MyLong ReadFromString(char* buffer)
+{
+	int size = 0;
+	
+	MyLong res;
+	SetMemory(1, &res);
+
+	if (buffer == NULL)
+	{
+		printf("Error by reading string!");
+		res.size = 0;
+		return res;
+	}
+	
+	if (strlen(buffer) == 0)
+	{
+		res.size = 0;
+		return res;
+	}
+	
+	MyLong k;
+	SetMemory(1, &k);
+	k.pointer[0] = 1;
+		
+	MyLong tmp1;
+	MyLong tmp2;
+
+	unsigned long long tmp = 0;
+	char ch;
+
+	for (int i = strlen(buffer)-1; i>-1; i--)
+	{
+	        ch = buffer[i];
+		if ((ch > '9') || (ch < '0'))
+		{
+			printf("Incorrect input!");
+			res.size = 0;
+			return res;
+		}
+		tmp = ch - '0';			
+		tmp1 = ShortMul(k, tmp);
+		tmp2 = Normalize(&tmp1);
+		res = Sum(res, tmp2);
+		FreeMemory(&tmp2);
+		k = ShortMul(k,10);
+	}
+	
+	FreeMemory(&k);
+	return res;
+}
+
 MyLong ReadTextFile(char* file)
 {
 	FILE* in;
@@ -544,24 +596,20 @@ MyLong ReadTextFile(char* file)
 	
 	MyLong res;
 	SetMemory(1, &res);
-	
+
 	if ((in = fopen(file, "r")) != NULL)
 	{
 		while (fgetc(in) != EOF)
 		{
 			size++;
 		}
-		
+
 		if (size == 0)
 		{
 			SetMemory(1, &res);
 			res.size = 0;
-			printf("File %s is empty", file);
 			return res;
 		}
-
-		fseek(in, 0, 0);
-		
 		MyLong k;
 		SetMemory(1, &k);
 		k.pointer[0] = 1;
@@ -569,10 +617,12 @@ MyLong ReadTextFile(char* file)
 		MyLong tmp1;
 
 		unsigned long long tmp = 0;
-		unsigned long long ost = 0;
 		char ch;
+		int offset = -1;
 
 		MyLong tmp2;
+
+		fseek(in, offset, SEEK_END);
 
 		while (offset!=-size-1)
 		{
@@ -583,6 +633,7 @@ MyLong ReadTextFile(char* file)
 				res.size = 0;
 				return res;
 			}
+
 			tmp = ch - '0';			
 			tmp1 = ShortMul(k, tmp);
 			tmp2 = Normalize(&tmp1);
@@ -591,8 +642,7 @@ MyLong ReadTextFile(char* file)
 			k = ShortMul(k,10);
 			offset--;
 			fseek(in, offset, SEEK_END);
-		}
-		
+		}	
 		fclose(in);
 		FreeMemory(&k);
 	}
@@ -601,81 +651,113 @@ MyLong ReadTextFile(char* file)
 		printf("Error by opening file %s!", file);
 		res.size = 0;		
 	}
+
 	return res;
 }
-int WriteTextFile(char* file, MyLong number)
-{
-	FILE* out;
 
+char* toString(MyLong number)
+{
 	MyLong numcopy;
 	SetMemory(number.size, &numcopy);
 	Copy(number, &numcopy);
-	MyLong numcopy1;
-	SetMemory(number.size, &numcopy1);
-	Copy(number, &numcopy1);
 
 	MyLong tmp;
 
-	//ñ÷èòàåì êîëè÷åñòâî ýëåìåíòîâ âûõîäíîãî ìàññèâà
 	unsigned long long ost;
 	unsigned long long k = 1;
+
+	if(ShortCompare(number,0)==0)
+		return "0";	
+
+	FILE* stream;
+
+	if ((stream = tmpfile())==NULL)
+	
+	{
+		printf("Temporary file wasn't created!");
+		return "";
+	}
+
+	unsigned long long size = 0;
 
 	while (ShortCompare(numcopy, 0) == 1)
 	{
 		tmp = numcopy;
-		numcopy = ShortDivide(numcopy, 1000000000, &ost);
+		numcopy = ShortDivide(numcopy, 10000000000000000000LLU, &ost);
 		FreeMemory(&tmp);
-		k++;
+
+		char buffer[] = "0000000000000000000";
+		int k = 18;
+		while (ost > 0)
+		{
+			buffer[k--] = ost % 10 + '0';
+			ost /= 10;	
+		}
+		fprintf(stream, "%s", buffer);
+		size++;        
 	}
 
-	if (k != 1) k--;
-	MyLong res;
-	SetMemory(k, &res);
-	
+
+	FreeMemory(&numcopy);
+
+	long long offset = -19;
+
+	fseek(stream, offset, SEEK_END);
+
+	char* str = (char*)malloc(sizeof(char)*(size+1)*19);
+
+	memset(str, '\0', (size+1)*19);
+
+	char tmps [19];	
+	fgets(tmps, 20, stream);
+	int count = 0;
+	while(tmps[count]=='0')
+		count++;
+	int s = 19-count;
+	char sss[19];
+	memset(sss, '\0', 19);
 	int i = 0;
-	while (ShortCompare(numcopy1, 0) == 1)
-	{
-		tmp = numcopy1;
-		numcopy1 = ShortDivide(numcopy1, 1000000000, &ost);
+	while(i!=s)
+		sss[i++]=tmps[count++];
+	strcat(str,sss);
+	offset-=19;
+	fseek(stream, offset, SEEK_END);
 
-		FreeMemory(&tmp);
-		res.pointer[i] = ost;
-		i++;
+	while(offset>-(size+1)*19)
+	{
+		fgets(tmps, 20, stream);
+		strcat(str, tmps);
+		offset-=19;
+		fseek(stream, offset, SEEK_END);
 	}
 
-	res = Normalize(&res);
+	fclose(stream);
+	
+
+	return str;
+}
+
+
+int WriteTextFile(char* file, MyLong number)
+{
+	FILE* out;
 
 	if ((out = fopen(file, "w")) != NULL)
 	{
-		fprintf(out, "%llu", res.pointer[res.size - 1]);
-
-		for (int i = res.size - 2; i > -1; i--)
+		char* str = toString(number);	
+		
+		if(fputs(str, out)==EOF)
 		{
-			//íóæíî ïðåäóñìîòðåòü òîò ñëó÷àé, êîãäà êîëè÷åñòâî öèôð < 9	
-			char buffer[10] = "000000000";
-			int k = 0;
-			while (res.pointer[i] > 0)
-			{
-				buffer[k++] = res.pointer[i] % 10 + '0';
-				res.pointer[i] /= 10;	
-			}
-			for (int i = 8; i > -1; i--)
-			{
-				fprintf(out, "%c", buffer[i]);
-			}
+			printf("Error by writing file %s", file);
+			return 0;
 		}
 
 		fclose(out);
-		FreeMemory(&numcopy);
-		FreeMemory(&numcopy1);
-		FreeMemory(&res);
-
 		return 1;
 	}
-	FreeMemory(&numcopy);
-	FreeMemory(&res);
-		printf("Error by opening file %s!", file);
-		return 0;
+
+	printf("Error by opening file %s!", file);
+	return 0;
 
 } 
 MyLong ReadBinFile(char* file)
@@ -719,6 +801,7 @@ MyLong ReadBinFile(char* file)
 	return number;
 }
 	
+
 
 
 

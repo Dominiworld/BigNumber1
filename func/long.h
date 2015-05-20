@@ -3,22 +3,22 @@ typedef struct
 	unsigned long long* pointer;
 	unsigned long long size;
 }
- MyLong;
+MyLong;
 
 
 void SetMemory(unsigned long long s, MyLong *p);
 void Copy(MyLong a, MyLong *p);
 void FreeMemory(MyLong *p);
 
-///Р‘РѕР»СЊС€РёРµ
+///Большие
 MyLong Sum(MyLong a, MyLong b);
 MyLong Sub(MyLong a, MyLong b);
 MyLong Mul(MyLong a, MyLong b);
 MyLong Divide(MyLong a, MyLong b, MyLong *mod);
-MyLong Pow(MyLong a, MyLong b, MyLong m); //РёСЃРїРѕР»СЊР·СѓРµС‚ smallPow, Pow32
+MyLong Pow(MyLong a, MyLong b, MyLong m); //использует smallPow, Pow32
 int Compare(MyLong a, MyLong b);
 
-///РњР°Р»РµРЅСЊРєРёРµ
+///Маленькие
 MyLong ShortSum(MyLong a, unsigned long long b);
 MyLong ShortSub(MyLong a, unsigned long long b);
 MyLong ShortMul(MyLong a, unsigned long long b);
@@ -26,12 +26,14 @@ MyLong ShortDivide(MyLong a, unsigned long long b, unsigned long long *ost);
 MyLong smallPow(MyLong a, unsigned long long p, MyLong m); //a^p mod m
 int ShortCompare(MyLong a, unsigned long long b);
 
-//Р’СЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Рµ
+//Вспомогательные
 MyLong Pow64(MyLong a, MyLong m);  //a^(2^32) mod m
-MyLong ShiftLeft(MyLong *a, unsigned long long i); //СЃРґРІРёРі РЅР° i СЌР»РµРјРµРЅС‚РѕРІ РјР°СЃСЃРёРІР° 
-MyLong Normalize(MyLong *a);			//СѓРјРµРЅСЊС€РµРЅРёРµ СЂР°Р·РјРµСЂР° a Р·Р° СЃС‡РµС‚ СѓР±РёСЂР°РЅРёСЏ РЅРµР·РЅР°С‡Р°С‰РёС… РЅСѓР»РµР№
+MyLong ShiftLeft(MyLong *a, unsigned long long i); //сдвиг на i элементов массива 
+MyLong Normalize(MyLong *a);			//уменьшение размера a за счет убирания незначащих нулей
 
-//Р Р°Р±РѕС‚Р° СЃ С„Р°Р№Р»Р°РјРё
+//Работа с файлами
+char* toString(MyLong number);
+MyLong ReadFromString(char* buffer);
 MyLong ReadTextFile(char* file);
 MyLong ReadBinFile(char* file);
 int WriteBinFile(char* file, MyLong number);

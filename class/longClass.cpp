@@ -1,9 +1,21 @@
 #include "stdio.h"
 #include "longClass.h"
 
-LONG::LONG()
+LONG::LONG(){}
+
+LONG::LONG(unsigned long long t)
 {
-	
+	LONG res;
+	SetMemory(1, &res.number);
+	res.number.pointer[0]=t;
+	this->number = res.number;
+}
+
+LONG::LONG(char* str)
+{
+	LONG res;
+	res.number = ReadFromString(str);
+	this->number = res.number;
 }
 
 bool LONG::IsEmpty()
@@ -11,10 +23,19 @@ bool LONG::IsEmpty()
 	return number.size == 0;
 }
 
+LONG LONG::operator=(unsigned long long t)
+{
+	LONG res;
+	SetMemory(1,&res.number);
+	res.number.pointer[0]=t;
+	return res;
+}
+
 LONG LONG::operator=(LONG t)
 {
-	this->number = t.number;
-	return *this;
+	LONG res;
+	Copy(t.number, &res.number);
+	return res;
 }
 
 LONG LONG::operator+(LONG t)
@@ -89,7 +110,6 @@ unsigned long long LONG::operator%(unsigned long long t)
 	return ost;
 }
 
-
 bool LONG::operator>(LONG t)
 {
 	return Compare(this->number, t.number) == 1;
@@ -163,7 +183,6 @@ bool LONG::ToTextFile(char* file)
 }
 void LONG::FromTextFile(char* file)
 {
-	
 	LONG res;
 	res.number = ReadTextFile(file);
 	*this = res;	
@@ -172,7 +191,6 @@ void LONG::FromBinFile(char* file)
 {
 	LONG res;
 	res.number = ReadBinFile(file);
-
 	*this = res;
 }
 void LONG::Kill()
@@ -180,6 +198,9 @@ void LONG::Kill()
 	MyLong t = this->number;
 	FreeMemory(&t);
 }
-
+char* LONG::Print()
+{
+  return toString(this->number);
+}
 
 
