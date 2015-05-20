@@ -683,7 +683,7 @@ char* toString(MyLong number)
 	while (ShortCompare(numcopy, 0) == 1)
 	{
 		tmp = numcopy;
-		numcopy = ShortDivide(numcopy, 10000000000000000000LLU, &ost);
+		numcopy = ShortDivide(numcopy, 10000000000000000000ULL, &ost);
 		FreeMemory(&tmp);
 
 		char buffer[] = "0000000000000000000";
