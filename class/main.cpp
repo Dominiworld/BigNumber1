@@ -2,7 +2,7 @@
 #include <locale.h>
 #include <string.h>
 
-#include "2.h"
+#include "longClass.h"
 
 
 
