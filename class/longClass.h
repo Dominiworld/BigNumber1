@@ -40,8 +40,8 @@ public:
 	bool ToBinFile(char* file);
 	bool ToTextFile(char* file);
 	bool IsEmpty();
-private:
-	MyLong number;
 	char* Print();
 	void Kill();
+private:
+	MyLong number;
 };
