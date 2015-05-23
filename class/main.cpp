@@ -119,7 +119,7 @@ int main(int argc, char * argv[])
 
 		case 'p':
 			
-			res = PowMod(a, b, m);
+			res = a.PowMod(b, m);
 			break;
 
 		default:
