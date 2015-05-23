@@ -22,7 +22,7 @@ int main(int argc, char * argv[])
 	if (argc < 5 || argc > 7)
 	{
 		printf("Неверный формат строки!");
-		printf("Основные операции: file1 operation(+, -, / , m, %) file2 resultfile [-b]");
+		printf("Основные операции: file1 operation(+, -, / , m, %%) file2 resultfile [-b]");
 		printf("Возведение в степень по модулю: file1 file2 p file3 resultfile [-b]");
 		getchar();
 		return 0;
